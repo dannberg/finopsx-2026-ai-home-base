@@ -1,0 +1,69 @@
+# =============================================================
+# tmux config — annotated example for the FinOps X talk
+# =============================================================
+
+# ---- Prefix ----
+# tmux's default prefix is Ctrl-B, which is awkward to reach.
+# I rebind it to Ctrl-A (classic GNU screen muscle memory).
+
+unbind C-b                              # drop the default Ctrl-B prefix
+set -g prefix C-a                       # new prefix: Ctrl-A
+bind C-a send-prefix                    # press Ctrl-A twice to send a literal Ctrl-A through to the program
+
+# ---- Core behavior ----
+
+set -g mouse on                         # click to focus panes, scroll to scroll back, drag borders to resize
+set -g history-limit 50000              # scrollback buffer (default is 2000 — tiny)
+set -sg escape-time 10                  # pass Escape through almost instantly (default 500ms makes vim feel sluggish)
+set -g base-index 1                     # windows start at 1 instead of 0 (matches the keyboard number row)
+setw -g pane-base-index 1               # same for panes — index from 1
+set -g renumber-windows on              # closing window 2 of 4 renumbers the rest to fill the gap
+
+# ---- Colors / terminal ----
+# Without these, you get wrong colors inside tmux even when your terminal supports truecolor.
+
+set -g default-terminal "tmux-256color"
+set -ag terminal-overrides ",xterm-256color:RGB,alacritty:RGB,ghostty:RGB,xterm-ghostty:RGB"  # enable 24-bit color in these terminals
+
+# ---- Remote-friendly ----
+# These matter most when SSHing into a long-lived tmux session on a remote box.
+
+set -g detach-on-destroy off            # closing the last window switches to another session instead of killing the client
+setw -g aggressive-resize on            # when multiple clients of different sizes attach, resize to fit the smallest visible one
+set -g focus-events on                  # forward terminal focus events to the running program (vim/nvim autoread relies on this)
+
+# ---- Visibility ----
+
+setw -g monitor-activity on             # flag windows with activity in the status bar
+set -g visual-activity off              # ...but don't pop a noisy notification, just flag it
+set -g status-interval 5                # refresh the status bar every 5s (default is 15)
+set -g status-left-length 40            # give session names enough room not to get truncated
+set -g status-left "#[fg=green]#S #[fg=yellow]#I:#P "    # left side: session name + window:pane index
+set -g status-right "#[fg=cyan]%H:%M #[fg=white]%d-%b"   # right side: time + date
+
+# ---- Splits that make sense ----
+# Default split bindings (% and ") aren't memorable. These match what the splits look like
+# and open the new pane/window in the current pane's working directory.
+
+bind | split-window -h -c "#{pane_current_path}"   # prefix + |  → vertical split
+bind - split-window -v -c "#{pane_current_path}"   # prefix + -  → horizontal split
+bind c new-window      -c "#{pane_current_path}"   # prefix + c  → new window in the same directory
+
+# ---- Reload config ----
+
+bind r source-file ~/.tmux.conf \; display "Config reloaded"   # prefix + r reloads this file in place
+
+# ---- Plugins ----
+# Managed via tpm (tmux plugin manager). Install added plugins with prefix + I.
+
+set -g @plugin 'tmux-plugins/tpm'              # the plugin manager itself
+set -g @plugin 'tmux-plugins/tmux-sensible'    # sensible defaults most configs end up setting anyway
+set -g @plugin 'tmux-plugins/tmux-resurrect'   # save/restore sessions across reboots (prefix + Ctrl-s / Ctrl-r)
+set -g @plugin 'tmux-plugins/tmux-continuum'   # auto-save resurrect snapshots on a schedule
+
+# Auto-restore sessions on tmux server start
+set -g @continuum-restore 'on'                 # restore the last saved session when tmux launches
+set -g @continuum-save-interval '15'           # save every 15 minutes
+
+# Initialize tpm — keep this line at the very bottom
+run '~/.tmux/plugins/tpm/tpm'

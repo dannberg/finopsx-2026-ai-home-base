@@ -1,0 +1,16 @@
+# macOS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local-only secrets or org-specific overrides
+.env
+.env.local
+secrets/
