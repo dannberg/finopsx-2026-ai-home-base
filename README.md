@@ -24,4 +24,4 @@ These are starting points, not best practices. They reflect my org's specifics, 
 
 ## Talk
 
-[Slides and recording link will go here once available.]
+[Recording link will go here once published by the FinOps Foundation.]
