@@ -10,7 +10,7 @@ This is an example of an "AI Home Base" — the folder structure, prompts, and s
 |---|---|
 | [Prompts/](Prompts/) | The doctored prompts from the talk's "Real Use Cases" section. Drop-in templates for SQL queries, anomaly communications, policy drafts, and architecture review. |
 | [Skills/](Skills/) | Reusable skill definitions an AI assistant can invoke automatically. Each one captures a workflow with house-style rules baked in. |
-| [Reference/](Reference/) | Personal config and dotfiles I demoed during the talk. |
+| [Reference/](Reference/) | Personal config, dotfiles, and static reference material the agent should be able to read — including a placeholder for [vendor contracts](Reference/Vendor%20Contracts/README.md). |
 | [Repos/](Repos/) | Small, focused codebases worth giving your AI agent access to. Pointers, not bundled copies. |
 
 ## How to use it
