@@ -14,3 +14,7 @@
 .env
 .env.local
 secrets/
+
+# Vendor contracts — confidential by default, README only
+Reference/Vendor Contracts/*
+!Reference/Vendor Contracts/README.md
